@@ -1,0 +1,6 @@
+/* styled-components 를 사용함으로써 쓰지 않게 됨 */
+
+.phone_list {
+  display: flex;
+  flex-direction: column;
+}
