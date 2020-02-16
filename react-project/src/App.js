@@ -20,7 +20,7 @@ class App extends Component {
       dummyData: {
         ...dummyData,
         [nextId]: {
-          id: nextId,
+          id: String(nextId),
           name,
           phone
         }
