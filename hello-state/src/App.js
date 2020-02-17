@@ -22,6 +22,25 @@ const ButtonWrapper = styled.div`
 class App extends Component {
   state = { number: 0 };
 
+  constructor(props) {
+    super(props);
+    console.log("constructor 호출");
+  }
+
+  componentDidMount() {
+    console.log("componentDidMount 호출");
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("shouldComponentUpdate 호출");
+    if (nextState.number % 3 === 0) return false;
+    return true;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("componentDidUpdate 호출");
+  }
+
   // setState() 함수에 state를 업데이트하는 함수 전달
   countUp = () => {
     this.setState(({ number }) => ({
@@ -39,6 +58,9 @@ class App extends Component {
     // 구조 분해 할당 구문
     const { number } = this.state;
     const { countUp, countDown } = this;
+
+    console.log("render 호출");
+
     return (
       <Wrapper>
         <ButtonWrapper>
