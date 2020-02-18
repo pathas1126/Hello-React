@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import CountButton from "./components/CountButton";
 import Number from "./components/Number";
 import styled from "styled-components";
@@ -19,58 +19,31 @@ const ButtonWrapper = styled.div`
   margin-bottom: 50px;
 `;
 
-class App extends Component {
-  state = { number: 0 };
+const App = () => {
+  const [number, setNumber] = useState(0);
 
-  constructor(props) {
-    super(props);
-    console.log("constructor 호출");
-  }
+  useEffect(() => {
+    console.log("useEffect -> componentDidMount");
+    return console.log("useEffect -> componentWillUnmount");
+  }, []);
 
-  componentDidMount() {
-    console.log("componentDidMount 호출");
-  }
+  useEffect(() => {
+    console.log(`componentDidUpdate (number) -> ${number}`);
+  }, [number]);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log("shouldComponentUpdate 호출");
-    if (nextState.number % 3 === 0) return false;
-    return true;
-  }
+  useEffect(() => {
+    console.log("useEffect -> componentDidUpdate");
+  });
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log("componentDidUpdate 호출");
-  }
-
-  // setState() 함수에 state를 업데이트하는 함수 전달
-  countUp = () => {
-    this.setState(({ number }) => ({
-      number: number + 1
-    }));
-  };
-
-  // setState() 앞에서 먼저 값을 받아서 전달
-  countDown = () => {
-    const { number } = this.state;
-    this.setState({ number: number - 1 });
-  };
-
-  render() {
-    // 구조 분해 할당 구문
-    const { number } = this.state;
-    const { countUp, countDown } = this;
-
-    console.log("render 호출");
-
-    return (
-      <Wrapper>
-        <ButtonWrapper>
-          <CountButton onClick={countUp} text="+"></CountButton>
-          <CountButton onClick={countDown} text="-"></CountButton>
-        </ButtonWrapper>
-        <Number number={number} />
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper>
+      <ButtonWrapper>
+        <CountButton onClick={() => setNumber(number + 1)} text="+" />
+        <CountButton onClick={() => setNumber(number - 1)} text="-" />
+      </ButtonWrapper>
+      <Number number={number} />
+    </Wrapper>
+  );
+};
 
 export default App;
