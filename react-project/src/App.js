@@ -1,58 +1,49 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import InputBox from "./components/InputBox";
 import PhoneList from "./components/PhoneList";
 import "./App.css";
 import { dummyData, nextId, setNextId } from "./lib/dummyData";
+import useInput from "./lib/useInput";
 
-class App extends Component {
-  state = { dummyData, name: "", phone: "" };
+const App = () => {
+  const [data, setData] = useState(dummyData);
+  const [name, setName, onChangeName] = useInput("");
+  const [phone, setPhone, onChangePhone] = useInput("");
 
-  handleInput = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  handleSubmit = () => {
-    const { dummyData, name, phone } = this.state;
-
+  const handleSubmit = () => {
     if (name === "" || phone === "") return;
-
-    this.setState({
-      dummyData: {
-        ...dummyData,
-        [nextId]: {
-          id: String(nextId),
-          name,
-          phone
-        }
-      },
-      name: "",
-      phone: ""
+    setData({
+      ...data,
+      [nextId]: {
+        id: String(nextId),
+        name,
+        phone
+      }
     });
+    setName("");
+    setPhone("");
+
     setNextId();
   };
 
-  handleRemove = id => {
-    const { [id]: _, ...dummyData } = this.state.dummyData;
+  const handleRemove = id => {
+    const { [id]: _, ...dummyData } = data;
 
-    this.setState({ dummyData });
+    setData(dummyData);
   };
 
-  render() {
-    const { handleInput, handleSubmit, handleRemove } = this;
-    const { dummyData, name, phone } = this.state;
-
-    return (
-      <div className="container">
-        <InputBox
-          name={name}
-          phone={phone}
-          onChange={handleInput}
-          onSubmit={handleSubmit}
-        />
-        <PhoneList list={dummyData} deleteItem={handleRemove} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="container">
+      <InputBox
+        name={name}
+        phone={phone}
+        onChangeName={onChangeName}
+        onChangePhone={onChangePhone}
+        onSubmit={handleSubmit}
+      />
+      <PhoneList list={data} deleteItem={handleRemove} />
+    </div>
+  );
+};
 
 export default App;

@@ -1,0 +1,17 @@
+// Custom Hook
+import { useState } from "react";
+
+const useInput = initialValue => {
+  const [value, setValue] = useState(initialValue);
+
+  const onChange = e => {
+    const {
+      target: { value }
+    } = e;
+    setValue(value);
+  };
+
+  return [value, setValue, onChange];
+};
+
+export default useInput;
