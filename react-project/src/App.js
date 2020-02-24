@@ -6,32 +6,25 @@ import "./App.css";
 // store와 연결을 위함
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as inputFunc from "./store/modules/input";
 import * as dataFunc from "./store/modules/data";
+import useInput from "./lib/hooks/useInput";
 
-const App = ({ name, phone, data, inputFunc, dataFunc }) => {
-  const handleChange = e => {
-    const { name, value } = e.target;
-    inputFunc.setInputValue({ name, value });
-  };
+const App = ({ data, dataFunc }) => {
+  const [{ name, phone }, onChange, setInitialValue] = useInput({
+    name: "",
+    phone: ""
+  });
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
     if (name === "" || phone === "") return;
 
     dataFunc.appendData({
       name,
       phone
     });
-
-    inputFunc.setInputValue({
-      name: "name",
-      value: ""
-    });
-    inputFunc.setInputValue({
-      name: "phone",
-      value: ""
-    });
+    setInitialValue();
   };
+
   const handleRemove = id => {
     dataFunc.removeData(id);
   };
@@ -41,7 +34,7 @@ const App = ({ name, phone, data, inputFunc, dataFunc }) => {
       <InputBox
         name={name}
         phone={phone}
-        onChange={handleChange}
+        onChange={onChange}
         onSubmit={handleSubmit}
       />
       <PhoneList list={data} deleteItem={handleRemove} />
@@ -51,12 +44,9 @@ const App = ({ name, phone, data, inputFunc, dataFunc }) => {
 
 export default connect(
   state => ({
-    name: state.input.name,
-    phone: state.input.phone,
     data: state.data
   }),
   dispatch => ({
-    inputFunc: bindActionCreators(inputFunc, dispatch),
     dataFunc: bindActionCreators(dataFunc, dispatch)
   })
 )(App);

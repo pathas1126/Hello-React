@@ -3,17 +3,19 @@
 
 // redux-actions, immer 라이브러리 import
 import { createAction, handleActions } from "redux-actions";
+import * as API from "../../lib/api";
 import produce from "immer";
+import { pender } from "redux-pender";
 
 // Actions
 // 액션 type을 상수로 선언, 액션 타입은 Uppercase로 작성
-const INCREASE = "INCREASE";
-const DECREASE = "DECREASE";
+const GET_NUM = "reducer/GET_NUM";
+const SET_NUM = "reducer/SET_NUM";
 
 // Action Creators
 // 액션 생성자, 함수 형태로 export 해야 함
-export const increase = createAction(INCREASE, number => number);
-export const decrease = createAction(DECREASE, number => number);
+export const getNum = createAction(GET_NUM, API.getNumber);
+export const setNum = createAction(SET_NUM, API.setNumber);
 
 // Initial State
 // Store의 초기값 지정
@@ -23,14 +25,20 @@ const initialState = {
 
 export default handleActions(
   {
-    [INCREASE]: (state, action) =>
-      produce(state, draft => {
-        draft.number = action.payload;
-      }),
-    [DECREASE]: (state, action) =>
-      produce(state, draft => {
-        draft.number = action.payload;
-      })
+    ...pender({
+      type: GET_NUM,
+      onSuccess: (state, action) =>
+        produce(state, draft => {
+          draft.number = action.payload.data;
+        })
+    }),
+    ...pender({
+      type: SET_NUM,
+      onSuccess: (state, action) =>
+        produce(state, draft => {
+          draft.number = action.payload.data;
+        })
+    })
   },
   initialState
 );

@@ -5,7 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import reducer from "./store";
+import reducer from "./store/modules/count";
 
 // store 생성 (리듀서 함수 연결 및 Redux Devtools Extension 연결)
 const store = createStore(
