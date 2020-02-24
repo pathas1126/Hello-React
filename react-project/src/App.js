@@ -1,35 +1,39 @@
-import React, { Component, useState } from "react";
+import React from "react";
 import InputBox from "./components/InputBox";
 import PhoneList from "./components/PhoneList";
 import "./App.css";
-import { dummyData, nextId, setNextId } from "./lib/dummyData";
-import useInput from "./lib/useInput";
 
-const App = () => {
-  const [data, setData] = useState(dummyData);
-  const [name, setName, onChangeName] = useInput("");
-  const [phone, setPhone, onChangePhone] = useInput("");
+// store와 연결을 위함
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as inputFunc from "./store/modules/input";
+import * as dataFunc from "./store/modules/data";
+
+const App = ({ name, phone, data, inputFunc, dataFunc }) => {
+  const handleChange = e => {
+    const { name, value } = e.target;
+    inputFunc.setInputValue({ name, value });
+  };
 
   const handleSubmit = () => {
     if (name === "" || phone === "") return;
-    setData({
-      ...data,
-      [nextId]: {
-        id: String(nextId),
-        name,
-        phone
-      }
+
+    dataFunc.appendData({
+      name,
+      phone
     });
-    setName("");
-    setPhone("");
 
-    setNextId();
+    inputFunc.setInputValue({
+      name: "name",
+      value: ""
+    });
+    inputFunc.setInputValue({
+      name: "phone",
+      value: ""
+    });
   };
-
   const handleRemove = id => {
-    const { [id]: _, ...dummyData } = data;
-
-    setData(dummyData);
+    dataFunc.removeData(id);
   };
 
   return (
@@ -37,8 +41,7 @@ const App = () => {
       <InputBox
         name={name}
         phone={phone}
-        onChangeName={onChangeName}
-        onChangePhone={onChangePhone}
+        onChange={handleChange}
         onSubmit={handleSubmit}
       />
       <PhoneList list={data} deleteItem={handleRemove} />
@@ -46,4 +49,14 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect(
+  state => ({
+    name: state.input.name,
+    phone: state.input.phone,
+    data: state.data
+  }),
+  dispatch => ({
+    inputFunc: bindActionCreators(inputFunc, dispatch),
+    dataFunc: bindActionCreators(dataFunc, dispatch)
+  })
+)(App);

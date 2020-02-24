@@ -1,5 +1,8 @@
 # Redux
 
+- 하나의 스토어만 만들 수 있지만 리듀서 함수의 개수는 정해져 있지 않음
+  특정 함수를 통해 리듀서 함수를 하나로 통합하여 내보낼 수 있기 때문
+
 ---
 
 ## createStore 함수
@@ -118,4 +121,28 @@ const mapDispatchToProps = dispatch => ({
 4. 불변성을 신경 쓰지 않는 것처럼 보여도 불변성이 잘 지켜짐
 5. 라이브러리를 사용하지 않으면 스토어 내에서 실수할 가능성이 있기 때문에
    라이브러리를 사용하는 습관을 들이는 것이 좋음
+
+## combineReducers 함수
+
+> redux 라이브러리 함수
+
+- 여러 개의 리듀서 함수를 하나로 합쳐주는 역할을 함
+
+## redux-pender
+
+> redux middleware 중 하나로 비동기 api 통신을 위한 라이브러리
+
+- redux middleware: 액션을 디스패치 했을 때, 리듀서에서 액션이 처리되기 전에
+  특정 코드를 실행시켜주는 것
+- 액션 로깅, 비동기 api 통신 등에 미들웨어 사용 가능
+- 필수는 아니지만 해당 라이브러리를 사용하면 개발 난이도가 많이 낮아짐
+
+# Axios
+
+> HTTP 통신 라이브러리
+> "Promise based HTTP client for the browser and node.js"
+
+- Promise란 비동기 처리에 사용되는 객체를 뜻함
+- axios는 비동기 방식으로 HTTP 요청을 처리
+- api와의 비동기 통신 목적으로 사용
 
