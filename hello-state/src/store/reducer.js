@@ -12,15 +12,8 @@ const DECREASE = "DECREASE";
 
 // Action Creators
 // 액션 생성자, 함수 형태로 export 해야 함
-export const increase = number => ({
-  type: INCREASE,
-  payload: number
-});
-
-export const decrease = number => ({
-  type: DECREASE,
-  payload: number
-});
+export const increase = createAction(INCREASE, number => number);
+export const decrease = createAction(DECREASE, number => number);
 
 // Initial State
 // Store의 초기값 지정
@@ -28,17 +21,16 @@ const initialState = {
   number: 0
 };
 
-// Reducer
-// Redux에서 가장 중요한 부분, 액션 타입에 따라 특정 코드를 실행
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "INCREASE":
-      return { number: action.payload };
-    case "DECREASE":
-      return { number: action.payload };
-    default:
-      return state;
-  }
-};
-
-export default reducer;
+export default handleActions(
+  {
+    [INCREASE]: (state, action) =>
+      produce(state, draft => {
+        draft.number = action.payload;
+      }),
+    [DECREASE]: (state, action) =>
+      produce(state, draft => {
+        draft.number = action.payload;
+      })
+  },
+  initialState
+);
