@@ -1,0 +1,88 @@
+# Redux
+
+---
+
+## createStore 함수
+
+> redux 라이브러리 함수
+
+- 스토어를 생성하는 함수
+- 리듀서 함수를 인자로 받아서 연결
+- 크롬 익스텐션을 사용하기 위해 추가로 인자 전달 가능
+- Redux 개발자 도구에서 @@INIT이라는 텍스트가 존재한다면 연결에 성공한 것
+
+## Provider 컴포넌트
+
+> react-redux에서 제공되는 컴포넌트
+
+- 프로젝트와 스토어를 연결할 때 사용하는 컴포넌트
+- ReactDOM.render() 함수 내부에 최상위 컴포넌트로 작성
+
+```jsx
+ReactDOM.render(
+	<Provider store={store}>
+    	<App/>
+    </Provider>
+, document.getElementById('root'));
+```
+
+## connect 함수
+
+> react-redux 라이브러리에 있는 함수
+
+- 복잡한 store 구독 과정을 알아서 처리해 주는 함수
+- 보통 아래와 같이 작성
+
+```js
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+```
+
+### mapStateToProps
+
+> 스토어의 상태 값을 Props로 매핑하는 함수
+
+- state를 인자로 받아서 props로 넘겨줄 값을 json 형태로 반환
+- 보통 다음과 같이 작성
+
+```js
+const mapStateToProps = state => ({
+    number: state.number
+});
+```
+
+### mapDispatchToProps
+
+> 액션 생성자를 Props로 매핑하는 함수
+
+- dispatch 함수를 인자값으로 받아와 props로 넘겨줄 값을 json 형태로 반환
+- 보통 다음과 같이 작성
+
+```js
+const mapDispatchToProps = dispatch => ({
+    increase: number => dispatch(increase(number)),
+    decrease: number => dispatch(decrease(number)),
+});
+```
+
+#### bindActionCreators(actionCreators, dispatch)
+
+> redux 라이브러리 함수
+
+- 값이 액션 생성자인 객체를 받아서 같은 키를 가지지만 각각의 생산자들을
+  dispatch로 감싸서 바로 호출 가능하게 만드는 객체로 바꿈
+- Redux를 상관하지 않는 컴포넌트로 액션 생성자를 넘기지만
+  dispatch나 Redux 스토어는 넘기고 싶지 않을 때만 사용하는 함수
+- 바로 위의 코드를 다음과 같이 작성 가능
+
+```js
+// props로 counterAction을 받아 counterActions.increase와 같은 형식으로 함수 사용 가능
+const mapDispatchToProps = dispatch => ({
+	counterActions: bindActionCreators(counterActions, dispatch)
+})
+```
+
+## redux-actions 라이브러리
+
+- 리듀서 함수 내에서 불변성은 필수 요소
+  → Immer, Immutable 등의 라이브러리 필요
+  Immutable은 get, set 함수 등을 통해 상태 값을 변경해야 함
